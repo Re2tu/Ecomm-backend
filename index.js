@@ -19,11 +19,14 @@ app.use(express.json()); //converted from a (JSON string) into a (JavaScript obj
 // {name: "John",age: 30}
 app.use(cors());  //Enables Cross-Origin Resource Sharing (CORS), allowing the server to handle requests from different origins.
 dotenv.config();
+const baseUrl = process.env.BASE_URL //|| `http://localhost:${port}`;
+
+
 // Database connection with mongodb 
 // mongoose.connect("mongodb+srv://dumpareethika:kVX3uqQ3twFuJ7Tj@cluster0.v70my.mongodb.net/e-commerce");
 const connectdatabase = async()=>{
     try{
-      const DB_URL = process.env.DB_URL
+      const DB_URL = process.env.DB_URL;
       await mongoose.connect(DB_URL);
       console.log('connected to database')
     }
@@ -52,20 +55,31 @@ app.get("/", (req, res) => {
 const storage = multer.diskStorage({
     destination: './upload/images',
     filename: (req, file, cb) => {
-        return cb(null, `${file.fieldname} ${Date.now()} ${path.extname(file.originalname)}`)
-    }
+    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+}
+
 })
+
+
 
 const upload = multer({ storage: storage })
 
 //creating upload endpoint for images
 app.use('/images', express.static('upload/images'))  // /image is an static endpoint
 
+// app.post("/upload", upload.single('product'), (req, res) => { // /upload is another endpoint
+//     res.json({
+//         success: 1,
+//         image_url: `http://localhost:${port}/images/${req.file.filename}`
+//     })
+// })
+
+
 app.post("/upload", upload.single('product'), (req, res) => { // /upload is another endpoint
     res.json({
         success: 1,
-        image_url: `http://localhost:${port}/images/${req.file.filename}`
-    })
+        image_url: `${baseUrl}/images/${req.file.filename}`
+    });
 })
 
 //Schema for creating products
