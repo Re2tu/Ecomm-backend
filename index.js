@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); // Secure password storage
+const bcrypt = require('bcryptjs'); // Secure password storage
 
 const app = express();
 const port = 4000;
