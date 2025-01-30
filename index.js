@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 const baseUrl = process.env.BASE_URL;
-
+console.log("baseUrl:", baseUrl);
 // ✅ Database Connection
 const connectDatabase = async () => {
     try {
