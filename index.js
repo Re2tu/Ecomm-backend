@@ -67,7 +67,7 @@ const storage = multer.diskStorage({
         cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     }
 });
-const upload = multer({ storage });
+const upload = multer({ storage:storage });
 
 app.use('/images', express.static('upload/images')); // Serve static images
 
@@ -190,7 +190,7 @@ app.post('/addtocart', fetchUser, async (req, res) => {
     let userData = await User.findById(req.user.id);
     userData.cartData[req.body.itemId] += 1;
     await userData.save();
-    res.send("Added");
+    res.json({message:"Added"});
 });
 
 // ✅ Remove from Cart API
@@ -200,7 +200,7 @@ app.post('/removefromcart', fetchUser, async (req, res) => {
         userData.cartData[req.body.itemId] -= 1;
     }
     await userData.save();
-    res.send("Removed");
+    res.json({message:"Removed"});
 });
 
 // ✅ Get Cart Data API
