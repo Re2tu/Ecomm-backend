@@ -187,11 +187,17 @@ const fetchUser = async (req, res, next) => {
 
 // ✅ Add to Cart API
 app.post('/addtocart', fetchUser, async (req, res) => {
+  try {
     let userData = await User.findById(req.user.id);
     userData.cartData[req.body.itemId] += 1;
     await userData.save();
-    res.json({message:"Added"});
+    res.json({ message: "Added" });
+  } catch (error) {
+    console.error("Add to cart failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 
 // ✅ Remove from Cart API
 app.post('/removefromcart', fetchUser, async (req, res) => {
